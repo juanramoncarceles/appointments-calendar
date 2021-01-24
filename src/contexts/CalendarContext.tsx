@@ -38,16 +38,6 @@ const calendarReducer = (state: IState, action: Action) => {
       console.log(action.payload);
       // Adds the new appointment to the list of appointments
       // TODO Check if the appointment with the same values already exist?
-      const startOfFirstDay = DateTime.fromISO(
-        action.payload.startDate.toISOString()
-      ).startOf("day");
-      const endOfLastDay = DateTime.fromISO(
-        action.payload.endDate.toISOString()
-      ).endOf("day");
-      action.payload.daysInterval = Interval.fromDateTimes(
-        startOfFirstDay,
-        endOfLastDay
-      );
       return {
         ...state,
         appointments: [...state.appointments, action.payload],

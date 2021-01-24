@@ -1,4 +1,5 @@
 import React, { ChangeEvent, useState } from "react";
+import { DateTime } from "luxon";
 import {
   Button,
   TextField,
@@ -63,8 +64,8 @@ const EventFormDialog = () => {
     // TODO Check if there are errors, if not dispatch and close the dialog, otherwise set errors on TextFields.
     if (title != "") {
       // Create the start and end date objects.
-      const startDate = new Date(`${selectedDay}T${startDateTime}:00Z`);
-      const endDate = new Date(`${selectedDay}T${endDateTime}:00Z`);
+      const startDate = DateTime.fromISO(`${selectedDay}T${startDateTime}:00Z`);
+      const endDate = DateTime.fromISO(`${selectedDay}T${endDateTime}:00Z`);
       // Dipatch action to add the appointment.
       calendarDispatch({
         type: "CREATE_APPOINTMENT",

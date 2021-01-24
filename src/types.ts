@@ -17,11 +17,11 @@ export interface WeekDay {
 export class AppointmentData {
   id: string;
   title: string;
-  startDate: Date;
-  endDate: Date;
+  startDate: DateTime;
+  endDate: DateTime;
   daysInterval: Interval;
 
-  constructor(title: string, startDate: Date, endDate: Date) {
+  constructor(title: string, startDate: DateTime, endDate: DateTime) {
     this.title = title;
     this.startDate = startDate;
     this.endDate = endDate;
@@ -35,9 +35,7 @@ export class AppointmentData {
    * An alternative would be just to use a uuid so all are unique.
    */
   createId() {
-    return `${
-      this.title
-    }${this.startDate.toISOString()}${this.endDate.toISOString()}`;
+    return `${this.title}${this.startDate.toISO()}${this.endDate.toISO()}`;
   }
 
   /**
@@ -46,13 +44,9 @@ export class AppointmentData {
    */
   createDaysInterval() {
     // The start time of the first day.
-    const startOfFirstDay = DateTime.fromISO(
-      this.startDate.toISOString()
-    ).startOf("day");
+    const startOfFirstDay = this.startDate.startOf("day");
     // The end time of the last day.
-    const endOfLastDay = DateTime.fromISO(this.endDate.toISOString()).endOf(
-      "day"
-    );
+    const endOfLastDay = this.endDate.endOf("day");
     // The final interval.
     return Interval.fromDateTimes(startOfFirstDay, endOfLastDay);
   }

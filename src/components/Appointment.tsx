@@ -24,9 +24,8 @@ const Appointment = ({ data }: IProps) => {
 
   return (
     <Box p={0.5} className={classes.root} borderRadius={2}>
-      {dateTimeToTimeString(DateTime.fromISO(data.startDate.toISOString()))} -{" "}
-      {dateTimeToTimeString(DateTime.fromISO(data.endDate.toISOString()))} -{" "}
-      {data.title}
+      {dateTimeToTimeString(data.startDate)} -{" "}
+      {dateTimeToTimeString(data.endDate)} - {data.title}
     </Box>
   );
 };
