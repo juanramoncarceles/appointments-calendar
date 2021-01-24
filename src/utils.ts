@@ -31,7 +31,7 @@ export function getWeekdaysDescriptions() {
 /**
  * Returns an array for the passed date's month with trailing dates for next/previous months.
  * The array represents a calendar that starts on Monday and ends on Sunday.
- * @param {string} date The date in format `yyyy-MM`
+ * @param date The date in format `yyyy-MM`
  */
 export function getMonthCalendarGrid(date: string) {
   const month = DateTime.fromFormat(date, MONTH_FORMAT);
@@ -72,7 +72,7 @@ export function getMonthCalendarGrid(date: string) {
 
 /**
  * Returns a localized formatted month and year string.
- * @param {string} month The month to get the key from.
+ * @param month The month to get the key from.
  */
 export function getDisplayMonthAndYear(month: string) {
   return DateTime.fromFormat(month, MONTH_FORMAT).toLocaleString({
@@ -80,4 +80,11 @@ export function getDisplayMonthAndYear(month: string) {
     year: "numeric",
     month: "long",
   });
+}
+
+/**
+ * Returns a 24 hour string representation of a time of the provided DateTime.
+ */
+export function dateTimeToTimeString(dateTime: DateTime) {
+  return dateTime.toLocaleString(DateTime.TIME_24_SIMPLE);
 }

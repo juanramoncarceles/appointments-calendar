@@ -12,6 +12,8 @@ import {
 import { useCalendarState } from "../contexts/CalendarContext";
 import { useCalendarDispatch } from "../contexts/CalendarContext";
 
+import { AppointmentData } from "../types";
+
 const EventFormDialog = () => {
   const { isDialogOpen, selectedDay } = useCalendarState();
   const calendarDispatch = useCalendarDispatch();
@@ -27,8 +29,8 @@ const EventFormDialog = () => {
 
   const [title, setTitle] = useState("");
   const [titleError, setTitleError] = useState(false);
-  const [startDate, setStartDate] = useState("07:00"); // TODO default could be 00:00? Google puts the current hour but every 30 min
-  const [endDate, setEndDate] = useState("08:00"); // TODO default should be one hour after the start date?
+  const [startDateTime, setStartDateTime] = useState("07:00"); // TODO default could be 00:00? Google puts the current hour but every 30 min
+  const [endDateTime, setEndDateTime] = useState("08:00"); // TODO default should be one hour after the start date?
 
   const handleClose = () => {
     calendarDispatch({ type: "CLOSE_DIALOG", payload: null });
@@ -46,7 +48,7 @@ const EventFormDialog = () => {
   ) => {
     // TODO Validate date...
     console.log("Start date", e.target.value);
-    setStartDate(e.target.value);
+    setStartDateTime(e.target.value);
   };
 
   const endDateHandler = (
@@ -54,26 +56,23 @@ const EventFormDialog = () => {
   ) => {
     // TODO Validate end date. Is it after start date?
     console.log("End date", e.target.value);
-    setEndDate(e.target.value);
+    setEndDateTime(e.target.value);
   };
 
   const handleSubmit = () => {
     // TODO Check if there are errors, if not dispatch and close the dialog, otherwise set errors on TextFields.
     if (title != "") {
-      // Creating the appointment object.
-      const appointmentData = {
-        id: "testId", // TODO this could be an uuid or a combination of title and exact date
-        title: title,
-        startDate: new Date(`${selectedDay}T${startDate}:00Z`),
-        endDate: new Date(`${selectedDay}T${endDate}:00Z`),
-      };
-      // Dipatch action to create the appointm
+      // Create the start and end date objects.
+      const startDate = new Date(`${selectedDay}T${startDateTime}:00Z`);
+      const endDate = new Date(`${selectedDay}T${endDateTime}:00Z`);
+      // Dipatch action to add the appointment.
       calendarDispatch({
         type: "CREATE_APPOINTMENT",
-        payload: appointmentData,
+        payload: new AppointmentData(title, startDate, endDate),
       });
       // Dipatch action to close the dilog.
       calendarDispatch({ type: "CLOSE_DIALOG", payload: null });
+      // TODO Reset form...
     } else {
       setTitleError(true);
     }
@@ -112,7 +111,7 @@ const EventFormDialog = () => {
             label="Hora de inicio"
             type="time"
             fullWidth
-            value={startDate}
+            value={startDateTime}
             onChange={e => startDateHandler(e)}
           />
           <TextField
@@ -122,7 +121,7 @@ const EventFormDialog = () => {
             type="time"
             fullWidth
             InputLabelProps={{ shrink: true }}
-            value={endDate}
+            value={endDateTime}
             onChange={e => endDateHandler(e)}
           />
         </DialogContent>
