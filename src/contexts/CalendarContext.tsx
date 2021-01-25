@@ -3,7 +3,7 @@ import { createContext, useContext, useReducer, ReactNode } from "react";
 import { uuidv4 } from "../utils";
 
 import { AppointmentData } from "../types";
-import type { AppointmentFormData } from "../types";
+import type { CalendarContextState, AppointmentFormData } from "../types";
 
 type Action =
   | { type: "NEW_APPOINTMENT"; payload: string }
@@ -13,24 +13,19 @@ type Action =
 
 type Dispatch = (action: Action) => void;
 
-interface IState {
-  isDialogOpen: boolean;
-  selectedDay: string | undefined; // example: 2021-01-10
-  appointments: AppointmentData[];
-  stagingAppointment: AppointmentData | undefined; // The appointment being updated.
-}
-
-const initialState: IState = {
+const initialState: CalendarContextState = {
   isDialogOpen: false,
   selectedDay: undefined,
   appointments: [],
   stagingAppointment: undefined,
 };
 
-const CalendarStateContext = createContext<IState | undefined>(undefined);
+const CalendarStateContext = createContext<CalendarContextState | undefined>(
+  undefined
+);
 const CalendarDispatchContext = createContext<Dispatch | undefined>(undefined);
 
-const calendarReducer = (state: IState, action: Action) => {
+const calendarReducer = (state: CalendarContextState, action: Action) => {
   switch (action.type) {
     // Opens the form dialog, sets the selected day and clears stagingAppointment.
     case "NEW_APPOINTMENT":
@@ -49,7 +44,7 @@ const calendarReducer = (state: IState, action: Action) => {
       // If it is an edit of an existing appointment here I get the old data.
       const existingAppointment = state.stagingAppointment;
       // The new state will be temporarily referenced here.
-      let newState: IState;
+      let newState: CalendarContextState;
       // If the appointment doesn't exist yet it is added, otherwise it is replaced.
       if (existingAppointment) {
         const updatedAppointment = new AppointmentData(
@@ -150,4 +145,11 @@ const useCalendarDispatch = () => {
   return context;
 };
 
-export { CalendarProvider, useCalendarState, useCalendarDispatch };
+// CalendarStateContext and CalendarDispatchContext are exported for testing.
+export {
+  CalendarProvider,
+  CalendarStateContext,
+  CalendarDispatchContext,
+  useCalendarState,
+  useCalendarDispatch,
+};

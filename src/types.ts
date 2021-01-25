@@ -13,6 +13,13 @@ export interface WeekDay {
   narrow: string;
 }
 
+export interface CalendarContextState {
+  isDialogOpen: boolean;
+  selectedDay: string | undefined; // example: 2021-01-10
+  appointments: AppointmentData[];
+  stagingAppointment: AppointmentData | undefined; // The appointment being updated.
+}
+
 export interface AppointmentFormData {
   title: string;
   startDateTime: DateTime;

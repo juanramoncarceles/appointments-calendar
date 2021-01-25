@@ -107,6 +107,7 @@ const EventFormDialog = () => {
         open={isDialogOpen}
         onClose={handleClose}
         aria-labelledby="form-dialog-title"
+        data-testid="appointment-dialog"
       >
         <DialogTitle id="form-dialog-title">{formHeading} Cita</DialogTitle>
         <DialogContent>
