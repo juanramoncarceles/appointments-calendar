@@ -1,4 +1,4 @@
-import React, { ChangeEvent, useState } from "react";
+import React, { ChangeEvent, useState, useEffect } from "react";
 import { DateTime } from "luxon";
 import {
   Button,
@@ -13,10 +13,10 @@ import {
 import { useCalendarState } from "../contexts/CalendarContext";
 import { useCalendarDispatch } from "../contexts/CalendarContext";
 
-import { AppointmentData } from "../types";
+import { dateTimeToTimeString } from "../utils";
 
 const EventFormDialog = () => {
-  const { isDialogOpen, selectedDay } = useCalendarState();
+  const { isDialogOpen, selectedDay, stagingAppointment } = useCalendarState();
   const calendarDispatch = useCalendarDispatch();
 
   // Temporary, could be used as the default start date in the form.
@@ -28,14 +28,27 @@ const EventFormDialog = () => {
       .padStart(2, "0")}:${now.getMinutes().toString().padStart(2, "0")}`;
   };
 
+  // TODO useReducer here to simplify state management.
+  const [formHeading, setFormHeading] = useState("");
   const [title, setTitle] = useState("");
   const [titleError, setTitleError] = useState(false);
-  const [startDateTime, setStartDateTime] = useState("07:00"); // TODO default could be 00:00? Google puts the current hour but every 30 min
-  const [endDateTime, setEndDateTime] = useState("08:00"); // TODO default should be one hour after the start date?
+  const [startTime, setStartDateTime] = useState("07:00"); // TODO default could be 00:00? Google puts the current hour but every 30 min
+  const [endTime, setEndDateTime] = useState("08:00"); // TODO default should be one hour after the start date?
 
-  const handleClose = () => {
-    calendarDispatch({ type: "CLOSE_DIALOG", payload: null });
-  };
+  useEffect(() => {
+    // Only if there is a stagingAppointment we are editing.
+    if (isDialogOpen && stagingAppointment) {
+      setFormHeading("Editar");
+      setTitle(stagingAppointment.title);
+      // TODO If in the form instead of a time picker a date time picker was
+      // used, the method dateTimeToTimeString() below should be replaced by
+      // another that returns a complete date string.
+      setStartDateTime(dateTimeToTimeString(stagingAppointment.startDate));
+      setEndDateTime(dateTimeToTimeString(stagingAppointment.endDate));
+    } else {
+      setFormHeading("Añadir");
+    }
+  }, [isDialogOpen]);
 
   const titleHandler = (
     e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -60,26 +73,34 @@ const EventFormDialog = () => {
     setEndDateTime(e.target.value);
   };
 
+  const handleClose = () => {
+    calendarDispatch({ type: "CLOSE_DIALOG" });
+    // Reset form values.
+    setTitle("");
+    // TODO reset also the times to the defaults.
+  };
+
   const handleSubmit = () => {
-    // TODO Check if there are errors, if not dispatch and close the dialog, otherwise set errors on TextFields.
-    if (title != "") {
-      // Create the start and end date objects.
-      const startDate = DateTime.fromISO(`${selectedDay}T${startDateTime}:00Z`);
-      const endDate = DateTime.fromISO(`${selectedDay}T${endDateTime}:00Z`);
-      // Dipatch action to add the appointment.
+    // TODO Use a library to validate the form values.
+    // For now I just check if title is now empty neither all spaces.
+    // If everything is ok I dispatch and close the dialog.
+    if (title.trim() !== "") {
+      // Create the start and end date time objects.
+      // TODO if instead of time pickers a date time picker is used the context's
+      // selectedDay wouldn't be necessary.
+      const startDateTime = DateTime.fromISO(`${selectedDay}T${startTime}:00Z`);
+      const endDateTime = DateTime.fromISO(`${selectedDay}T${endTime}:00Z`);
       calendarDispatch({
-        type: "CREATE_APPOINTMENT",
-        payload: new AppointmentData(title, startDate, endDate),
+        type: "SUBMIT_APPOINTMENT",
+        payload: { title, startDateTime, endDateTime },
       });
-      // Dipatch action to close the dilog.
-      calendarDispatch({ type: "CLOSE_DIALOG", payload: null });
-      // TODO Reset form...
+      handleClose();
     } else {
       setTitleError(true);
     }
   };
 
-  // TODO Using a form would be more accessible?
+  // TODO Using a form would be more accessible? and better for submit with Enter and disable autoComplete...
   return (
     <div>
       <Dialog
@@ -87,11 +108,11 @@ const EventFormDialog = () => {
         onClose={handleClose}
         aria-labelledby="form-dialog-title"
       >
-        <DialogTitle id="form-dialog-title">Añadir Cita</DialogTitle>
+        <DialogTitle id="form-dialog-title">{formHeading} Cita</DialogTitle>
         <DialogContent>
-          <DialogContentText>
+          {/* <DialogContentText>
             Para añadir una cita rellena los siguientes campos.
-          </DialogContentText>
+          </DialogContentText> */}
           <TextField
             required
             autoFocus
@@ -112,7 +133,7 @@ const EventFormDialog = () => {
             label="Hora de inicio"
             type="time"
             fullWidth
-            value={startDateTime}
+            value={startTime}
             onChange={e => startDateHandler(e)}
           />
           <TextField
@@ -122,7 +143,7 @@ const EventFormDialog = () => {
             type="time"
             fullWidth
             InputLabelProps={{ shrink: true }}
-            value={endDateTime}
+            value={endTime}
             onChange={e => endDateHandler(e)}
           />
         </DialogContent>

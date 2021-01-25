@@ -13,36 +13,35 @@ export interface WeekDay {
   narrow: string;
 }
 
-// TODO if startDate or endDate of the appointment is updated the daysInterval should be recalculated, use setters / getters?
+export interface AppointmentFormData {
+  title: string;
+  startDateTime: DateTime;
+  endDateTime: DateTime;
+}
+
 export class AppointmentData {
   id: string;
   title: string;
   startDate: DateTime;
   endDate: DateTime;
-  daysInterval: Interval;
 
-  constructor(title: string, startDate: DateTime, endDate: DateTime) {
+  constructor(
+    id: string,
+    title: string,
+    startDate: DateTime,
+    endDate: DateTime
+  ) {
+    this.id = id;
     this.title = title;
     this.startDate = startDate;
     this.endDate = endDate;
-    this.id = this.createId();
-    this.daysInterval = this.createDaysInterval();
   }
 
   /**
-   * The id is created this way so two appointments with the same values
-   * could be found. Maybe not a good idea if the appointment data is updated it should change.
-   * An alternative would be just to use a uuid so all are unique.
+   * The interval of complete days that the appointment lasts.
+   * From the beginning of the first day until the end of the last day.
    */
-  createId() {
-    return `${this.title}${this.startDate.toISO()}${this.endDate.toISO()}`;
-  }
-
-  /**
-   * Creates a time interval starting at the beginning of the first day and
-   * ending at the end of the last day.
-   */
-  createDaysInterval() {
+  get daysInterval() {
     // The start time of the first day.
     const startOfFirstDay = this.startDate.startOf("day");
     // The end time of the last day.
@@ -51,3 +50,11 @@ export class AppointmentData {
     return Interval.fromDateTimes(startOfFirstDay, endOfLastDay);
   }
 }
+
+/**
+ * Type Guard to check if the provided EventTarget is an Element.
+ * https://developer.mozilla.org/en-US/docs/Web/API/Element
+ */
+// export function isDOMElement(x: EventTarget): x is Element {
+//   return (x as Element).className !== undefined;
+// }

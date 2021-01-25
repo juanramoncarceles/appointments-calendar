@@ -1,7 +1,6 @@
 import React from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import { Box } from "@material-ui/core";
-import { DateTime } from "luxon";
 
 import { dateTimeToTimeString } from "../utils";
 
@@ -18,12 +17,18 @@ const useStyles = makeStyles({
 });
 
 const Appointment = ({ data }: IProps) => {
-  // TODO if the appointment takes all day how to show? a "all day" string?
+  // TODO if the appointment takes all day because it starts the day
+  // before and ends the day after how to show? an "all day" string?
 
   const classes = useStyles();
 
   return (
-    <Box p={0.5} className={classes.root} borderRadius={2}>
+    <Box
+      id={data.id}
+      className={`appointment-identifier ${classes.root}`}
+      p={0.5}
+      borderRadius={2}
+    >
       {dateTimeToTimeString(data.startDate)} -{" "}
       {dateTimeToTimeString(data.endDate)} - {data.title}
     </Box>

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { MouseEvent, KeyboardEvent } from "react";
 import { Box, Typography } from "@material-ui/core";
 import { DateTime } from "luxon";
 
@@ -22,11 +22,27 @@ const Day = ({ date }: IProps) => {
 
   const classes = useStyles();
 
+  /**
+   * Handles if the click occurs in the day itself or in an appointment item inside.
+   * This is to avoid individual handlers and having to use stopPropagation() in the child ones.
+   * TODO The type of the param should be `MouseEvent | KeyboardEvent` but there is a problem with
+   * the compiler and I can't cast values neither use a type guard. Cast would be: `target as Element`
+   */
+  const clickHandler = (e: any) => {
+    const target = e.target;
+    if (target.closest(".appointment-identifier")) {
+      calendarDispatch({ type: "EDIT_APPOINTMENT", payload: target.id });
+    } else {
+      calendarDispatch({ type: "NEW_APPOINTMENT", payload: date.key });
+    }
+  };
+
+  // TODO The day and event should be able to have focus, use tabIndex or buttons.
   return (
     <Box
-      onClick={() =>
-        calendarDispatch({ type: "OPEN_DIALOG", payload: date.key })
-      }
+      tabIndex={0}
+      onClick={e => clickHandler(e)}
+      onKeyDown={e => e.key === "Enter" && clickHandler(e)}
       display="flex"
       flexDirection="column"
       p={1}
