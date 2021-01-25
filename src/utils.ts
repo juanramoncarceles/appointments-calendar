@@ -84,9 +84,17 @@ export function getDisplayMonthAndYear(month: string) {
 
 /**
  * Returns a 24 hour string representation of a time of the provided DateTime.
+ * Hour value is not padded, for example: 9:00
  */
 export function dateTimeToTimeString(dateTime: DateTime) {
   return dateTime.toLocaleString(DateTime.TIME_24_SIMPLE);
+}
+
+/**
+ * Returns a 24 hour padded string representation of a time of the provided DateTime.
+ */
+export function dateTimeToPaddedTimeString(dateTime: DateTime) {
+  return dateTime.toFormat("hh:mm");
 }
 
 /**

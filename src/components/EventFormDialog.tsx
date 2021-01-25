@@ -13,7 +13,7 @@ import {
 import { useCalendarState } from "../contexts/CalendarContext";
 import { useCalendarDispatch } from "../contexts/CalendarContext";
 
-import { dateTimeToTimeString } from "../utils";
+import { dateTimeToPaddedTimeString } from "../utils";
 
 const EventFormDialog = () => {
   const { isDialogOpen, selectedDay, stagingAppointment } = useCalendarState();
@@ -43,8 +43,10 @@ const EventFormDialog = () => {
       // TODO If in the form instead of a time picker a date time picker was
       // used, the method dateTimeToTimeString() below should be replaced by
       // another that returns a complete date string.
-      setStartDateTime(dateTimeToTimeString(stagingAppointment.startDate));
-      setEndDateTime(dateTimeToTimeString(stagingAppointment.endDate));
+      setStartDateTime(
+        dateTimeToPaddedTimeString(stagingAppointment.startDate)
+      );
+      setEndDateTime(dateTimeToPaddedTimeString(stagingAppointment.endDate));
     } else {
       setFormHeading("Añadir");
     }
