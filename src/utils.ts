@@ -98,6 +98,13 @@ export function dateTimeToPaddedTimeString(dateTime: DateTime) {
 }
 
 /**
+ * Returns a boolean indicating if the provided date time is today.
+ */
+export function isToday(dateTime: DateTime) {
+  return dateTime.hasSame(DateTime.local(), "day");
+}
+
+/**
  * Returns a string uuid.
  * https://stackoverflow.com/questions/105034/create-guid-uuid-in-javascript
  */

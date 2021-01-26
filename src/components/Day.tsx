@@ -11,6 +11,7 @@ import {
 } from "../contexts/CalendarContext";
 
 import type { DayDate } from "../types";
+import { isToday } from "../utils";
 import { useStyles } from "../hooks/useStyles";
 
 const Root = styled(Box)({
@@ -103,7 +104,13 @@ const Day = ({ date }: IProps) => {
       tabIndex={0}
       onClick={e => clickHandler(e)}
       onKeyDown={e => e.key === "Enter" && clickHandler(e)}
-      bgcolor={date.isWeekend ? "#f4f1ce" : "white"}
+      bgcolor={
+        isToday(DateTime.fromISO(date.key))
+          ? "#e5fbdc"
+          : date.isWeekend
+          ? "#f4f1ce"
+          : "white"
+      }
       style={{
         opacity: date.trailing ? 0.4 : 1,
       }}
