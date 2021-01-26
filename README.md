@@ -1,7 +1,8 @@
-# Monthly calendar for appointments excercise
+# Monthly calendar for appointments
 
 Uses:
 
 - React
 - TypeScript
 - Material UI
+- Luxon
