@@ -5,7 +5,7 @@ const useStyles = makeStyles((theme: Theme) =>
     container: {
       // rename to gridContainer7
       display: "grid",
-      gridTemplateColumns: "repeat(7, 1fr)",
+      gridTemplateColumns: "repeat(7, minmax(0,1fr))",
       gridGap: theme.spacing(1),
     },
     mbAllButLast: {

@@ -31,6 +31,10 @@ const Root = styled(Box)({
     boxShadow: "4px 4px 0px #88b0b8",
     zIndex: 10,
   },
+
+  "&:hover .appointment-identifier": {
+    backgroundImage: "linear-gradient(45deg, #f494a9 30%, #f6957a 90%)",
+  },
 });
 
 const AContainer = styled(Box)({
@@ -39,21 +43,28 @@ const AContainer = styled(Box)({
   flexGrow: 1,
   maxHeight: 115,
   overflowY: "hidden",
+  overflowX: "hidden",
   borderRadius: 6,
-  backgroundColor: "inherit",
 
   "&:hover": {
     overflowY: "visible",
+    overflowX: "visible",
   },
 
   "& > div": {
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "flex-start",
     flexGrow: 1,
     padding: 2,
-    backgroundColor: "inherit",
   },
 
-  "&:hover > div": {
-    outline: "1px solid #aec8cd",
+  "& .appointment-identifier": {
+    backgroundImage: "linear-gradient(45deg, #ebd7db 30%, #f1d3ca 90%)",
+  },
+
+  "& .appointment-identifier:hover": {
+    backgroundImage: "linear-gradient(45deg, #FE6B8B 30%, #FF8E53 90%)",
   },
 });
 
@@ -75,8 +86,12 @@ const Day = ({ date }: IProps) => {
    */
   const clickHandler = (e: any) => {
     const target = e.target;
-    if (target.closest(".appointment-identifier")) {
-      calendarDispatch({ type: "EDIT_APPOINTMENT", payload: target.id });
+    let appointmentContainer: Element;
+    if ((appointmentContainer = target.closest(".appointment-identifier"))) {
+      calendarDispatch({
+        type: "EDIT_APPOINTMENT",
+        payload: appointmentContainer.id,
+      });
     } else {
       calendarDispatch({ type: "NEW_APPOINTMENT", payload: date.key });
     }
