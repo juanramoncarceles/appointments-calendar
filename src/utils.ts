@@ -94,7 +94,7 @@ export function dateTimeToTimeString(dateTime: DateTime) {
  * Returns a 24 hour padded string representation of a time of the provided DateTime.
  */
 export function dateTimeToPaddedTimeString(dateTime: DateTime) {
-  return dateTime.toFormat("hh:mm");
+  return dateTime.toFormat("HH:mm");
 }
 
 /**
