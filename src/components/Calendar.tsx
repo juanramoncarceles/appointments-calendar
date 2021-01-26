@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 import { DateTime, Interval } from "luxon";
+import { Typography } from "@material-ui/core";
+
 import { getWeekdaysDescriptions, getMonthCalendarGrid } from "../utils";
 
 import CalendarHeader from "./CalendarHeader";
@@ -19,6 +21,9 @@ const Calendar = () => {
   return (
     <div>
       <CalendarHeader month={activeMonth} />
+      <Typography align="center" gutterBottom>
+        Seleccione un día para añadir una cita
+      </Typography>
       {/* wrap the two elements below in a <CalendarView /> */}
       <MonthHeader weekDays={weekDays} />
       <MonthGrid dates={monthDates} />

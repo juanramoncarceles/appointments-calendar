@@ -12,7 +12,7 @@ const CalendarHeader = ({ month }: IProps) => {
   const monthAndYearString = getDisplayMonthAndYear(month);
 
   return (
-    <Typography variant="h1" align="center" gutterBottom>
+    <Typography component="h1" variant="h2" align="center" gutterBottom>
       {monthAndYearString}
     </Typography>
   );

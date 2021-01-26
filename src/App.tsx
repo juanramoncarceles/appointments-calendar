@@ -1,5 +1,5 @@
 import React from "react";
-import { Container, Typography, Box, Link } from "@material-ui/core";
+import { Container, Box, Link } from "@material-ui/core";
 
 import { CalendarProvider } from "./contexts/CalendarContext";
 
@@ -14,12 +14,15 @@ const App = () => {
           <Calendar />
           <AppointmentFormDialog />
         </CalendarProvider>
-        <Typography variant="body2" color="textSecondary" align="center">
-          Ejercicio para Social WOW - Ramón Cárceles{" "}
-          {/* <Link color="inherit" href="#">
+        <Box color="textSecondary" textAlign="center" mt={2}>
+          <Link
+            color="inherit"
+            href="https://github.com/juanramoncarceles/appointments-calendar"
+            target="_blank"
+          >
             GitHub
-          </Link> */}
-        </Typography>
+          </Link>
+        </Box>
       </Box>
     </Container>
   );

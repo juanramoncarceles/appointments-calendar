@@ -14,7 +14,7 @@ const MonthGrid = ({ dates }: IProps) => {
   const classes = useStyles();
 
   return (
-    <Box bgcolor="lightgray" p={1} className={classes.container}>
+    <Box px={1} className={classes.container}>
       {dates.map(date => (
         <Day key={date.key} date={date} />
       ))}

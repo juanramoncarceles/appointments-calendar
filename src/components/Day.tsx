@@ -1,5 +1,6 @@
 import React, { MouseEvent, KeyboardEvent } from "react";
 import { Box, Typography } from "@material-ui/core";
+import { styled } from "@material-ui/core/styles";
 import { DateTime } from "luxon";
 
 import Appointment from "./Appointment";
@@ -11,6 +12,50 @@ import {
 
 import type { DayDate } from "../types";
 import { useStyles } from "../hooks/useStyles";
+
+const Root = styled(Box)({
+  display: "flex",
+  flexDirection: "column",
+  minHeight: 110,
+  padding: 6,
+  border: "1px solid #88b0b8",
+  borderRadius: 2,
+  position: "relative",
+  outline: "none",
+  boxShadow: "2px 2px 0px #88b0b8",
+  cursor: "pointer",
+  transition: "transform 0.2s, box-shadow 0.2s",
+
+  "&:hover, &:focus": {
+    transform: "translate(-2px, -2px)",
+    boxShadow: "4px 4px 0px #88b0b8",
+    zIndex: 10,
+  },
+});
+
+const AContainer = styled(Box)({
+  display: "flex",
+  flexDirection: "column",
+  flexGrow: 1,
+  maxHeight: 115,
+  overflowY: "hidden",
+  borderRadius: 6,
+  backgroundColor: "inherit",
+
+  "&:hover": {
+    overflowY: "visible",
+  },
+
+  "& > div": {
+    flexGrow: 1,
+    padding: 2,
+    backgroundColor: "inherit",
+  },
+
+  "&:hover > div": {
+    outline: "1px solid #aec8cd",
+  },
+});
 
 interface IProps {
   date: DayDate;
@@ -39,26 +84,28 @@ const Day = ({ date }: IProps) => {
 
   // TODO The day and event should be able to have focus, use tabIndex or buttons.
   return (
-    <Box
+    <Root
       tabIndex={0}
       onClick={e => clickHandler(e)}
       onKeyDown={e => e.key === "Enter" && clickHandler(e)}
-      display="flex"
-      flexDirection="column"
-      p={1}
-      bgcolor={date.isWeekend ? "palegoldenrod" : "white"}
+      bgcolor={date.isWeekend ? "#f4f1ce" : "white"}
+      style={{
+        opacity: date.trailing ? 0.4 : 1,
+      }}
     >
       <Typography component="h5" align="center" gutterBottom>
         {date.text}
       </Typography>
-      <div className={classes.mbAllButLast}>
-        {appointments
-          .filter(a => a.daysInterval.contains(DateTime.fromISO(date.key)))
-          .map(a => (
-            <Appointment key={a.id} data={a} />
-          ))}
-      </div>
-    </Box>
+      <AContainer>
+        <div className={classes.mbAllButLast}>
+          {appointments
+            .filter(a => a.daysInterval.contains(DateTime.fromISO(date.key)))
+            .map(a => (
+              <Appointment key={a.id} data={a} />
+            ))}
+        </div>
+      </AContainer>
+    </Root>
   );
 };
 
