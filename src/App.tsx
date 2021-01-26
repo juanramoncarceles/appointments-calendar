@@ -4,7 +4,7 @@ import { Container, Typography, Box, Link } from "@material-ui/core";
 import { CalendarProvider } from "./contexts/CalendarContext";
 
 import Calendar from "./components/Calendar";
-import EventFormDialog from "./components/EventFormDialog";
+import AppointmentFormDialog from "./components/AppointmentFormDialog";
 
 const App = () => {
   return (
@@ -12,7 +12,7 @@ const App = () => {
       <Box my={4}>
         <CalendarProvider>
           <Calendar />
-          <EventFormDialog />
+          <AppointmentFormDialog />
         </CalendarProvider>
         <Typography variant="body2" color="textSecondary" align="center">
           Ejercicio para Social WOW - Ramón Cárceles{" "}

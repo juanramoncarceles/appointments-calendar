@@ -15,7 +15,7 @@ import { useCalendarDispatch } from "../contexts/CalendarContext";
 
 import { dateTimeToPaddedTimeString } from "../utils";
 
-const EventFormDialog = () => {
+const AppointmentFormDialog = () => {
   const { isDialogOpen, selectedDay, stagingAppointment } = useCalendarState();
   const calendarDispatch = useCalendarDispatch();
 
@@ -163,4 +163,4 @@ const EventFormDialog = () => {
   );
 };
 
-export default EventFormDialog;
+export default AppointmentFormDialog;

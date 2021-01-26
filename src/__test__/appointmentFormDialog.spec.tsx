@@ -1,6 +1,6 @@
 import { render } from "@testing-library/react";
 
-import EventFormDialog from "../components/EventFormDialog";
+import AppointmentFormDialog from "../components/AppointmentFormDialog";
 import {
   CalendarStateContext,
   CalendarDispatchContext,
@@ -8,7 +8,7 @@ import {
 
 import type { CalendarContextState } from "../types";
 
-describe("<AppointmentDialog/>", () => {
+describe("<AppointmentFormDialog/>", () => {
   const state: CalendarContextState = {
     isDialogOpen: true,
     selectedDay: undefined,
@@ -20,11 +20,11 @@ describe("<AppointmentDialog/>", () => {
     // I set it to true before passing it to context.
     state.isDialogOpen = true;
 
-    // Dispatch context is required by hooks inside EventFormDialog but it does nothing.
+    // Dispatch context is required by hooks inside AppointmentFormDialog but it does nothing.
     const { queryByTestId } = render(
       <CalendarStateContext.Provider value={state}>
         <CalendarDispatchContext.Provider value={() => {}}>
-          <EventFormDialog />
+          <AppointmentFormDialog />
         </CalendarDispatchContext.Provider>
       </CalendarStateContext.Provider>
     );
@@ -40,7 +40,7 @@ describe("<AppointmentDialog/>", () => {
     const { queryByTestId } = render(
       <CalendarStateContext.Provider value={state}>
         <CalendarDispatchContext.Provider value={() => {}}>
-          <EventFormDialog />
+          <AppointmentFormDialog />
         </CalendarDispatchContext.Provider>
       </CalendarStateContext.Provider>
     );
