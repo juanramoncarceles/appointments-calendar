@@ -100,6 +100,10 @@ const Day = ({ date }: IProps) => {
         <div className={classes.mbAllButLast}>
           {appointments
             .filter(a => a.daysInterval.contains(DateTime.fromISO(date.key)))
+            // TODO this will not work if in the future appointments can start
+            // and end in differnt days. For that filter again to put first the
+            // ones that start in a previous day and sort the rest and concat.
+            .sort((a, b) => a.startDate.toMillis() - b.startDate.toMillis())
             .map(a => (
               <Appointment key={a.id} data={a} />
             ))}
