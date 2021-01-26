@@ -99,7 +99,13 @@ const Day = ({ date }: IProps) => {
       <AContainer>
         <div className={classes.mbAllButLast}>
           {appointments
-            .filter(a => a.daysInterval.contains(DateTime.fromISO(date.key)))
+            // Keep comparison time as 00:00:00 because contains() is inclusive, and otherwise if
+            // appointments are longer than a day it could fail, because if if I set a time during
+            // the day and the appointment ends that day but at a time before, the day will be excluded.
+            // Important to add the Z at the end to compare as UTC, like the start and end dates were created.
+            .filter(a =>
+              a.daysInterval.contains(DateTime.fromISO(`${date.key}T00:00:00Z`))
+            )
             // TODO this will not work if in the future appointments can start
             // and end in differnt days. For that filter again to put first the
             // ones that start in a previous day and sort the rest and concat.

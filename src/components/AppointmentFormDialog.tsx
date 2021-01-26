@@ -87,11 +87,15 @@ const AppointmentFormDialog = () => {
     // For now I just check if title is now empty neither all spaces.
     // If everything is ok I dispatch and close the dialog.
     if (title.trim() !== "") {
-      // Create the start and end date time objects.
+      // Create the start and end date time objects. Used zone UTC for simplicity.
       // TODO if instead of time pickers a date time picker is used the context's
       // selectedDay wouldn't be necessary.
-      const startDateTime = DateTime.fromISO(`${selectedDay}T${startTime}:00Z`);
-      const endDateTime = DateTime.fromISO(`${selectedDay}T${endTime}:00Z`);
+      const startDateTime = DateTime.fromISO(`${selectedDay}T${startTime}:00`, {
+        zone: "utc",
+      });
+      const endDateTime = DateTime.fromISO(`${selectedDay}T${endTime}:00`, {
+        zone: "utc",
+      });
       calendarDispatch({
         type: "SUBMIT_APPOINTMENT",
         payload: { title, startDateTime, endDateTime },
