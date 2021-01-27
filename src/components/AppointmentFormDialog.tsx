@@ -106,7 +106,6 @@ const AppointmentFormDialog = () => {
     e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
     // TODO Validate date...
-    console.log("Start date", e.target.value);
     dispatch({ type: "START_TIME_VALUE", payload: e.target.value });
   };
 
@@ -114,7 +113,6 @@ const AppointmentFormDialog = () => {
     e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
     // TODO Validate end date. Is it after start date?
-    console.log("End date", e.target.value);
     dispatch({ type: "END_TIME_VALUE", payload: e.target.value });
   };
 
