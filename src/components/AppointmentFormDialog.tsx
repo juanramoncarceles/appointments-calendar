@@ -1,4 +1,4 @@
-import React, { ChangeEvent, useState, useEffect } from "react";
+import React, { ChangeEvent, useState, useEffect, useReducer } from "react";
 import { DateTime } from "luxon";
 import {
   Button,
@@ -15,6 +15,46 @@ import { useCalendarDispatch } from "../contexts/CalendarContext";
 
 import { dateTimeToPaddedTimeString } from "../utils";
 
+type Action =
+  | { type: "FORM_HEADING"; payload: string }
+  | { type: "TITLE_VALUE"; payload: string }
+  | { type: "TITLE_ERROR"; payload: boolean }
+  | { type: "START_TIME_VALUE"; payload: string }
+  | { type: "END_TIME_VALUE"; payload: string };
+
+interface IState {
+  formHeading: string;
+  title: string;
+  titleError: boolean;
+  startTime: string;
+  endTime: string;
+}
+
+const initialState: IState = {
+  formHeading: "",
+  title: "",
+  titleError: false,
+  startTime: "07:00", // TODO default could be 00:00? Google puts the current hour but every 30 min
+  endTime: "08:00", // TODO default should be one hour after the start date?
+};
+
+const formReducer = (state: IState, action: Action) => {
+  switch (action.type) {
+    case "FORM_HEADING":
+      return { ...state, formHeading: action.payload };
+    case "TITLE_VALUE":
+      return { ...state, title: action.payload };
+    case "TITLE_ERROR":
+      return { ...state, titleError: action.payload };
+    case "START_TIME_VALUE":
+      return { ...state, startTime: action.payload };
+    case "END_TIME_VALUE":
+      return { ...state, endTime: action.payload };
+    default:
+      throw new Error();
+  }
+};
+
 const AppointmentFormDialog = () => {
   const { isDialogOpen, selectedDay, stagingAppointment } = useCalendarState();
   const calendarDispatch = useCalendarDispatch();
@@ -28,27 +68,30 @@ const AppointmentFormDialog = () => {
       .padStart(2, "0")}:${now.getMinutes().toString().padStart(2, "0")}`;
   };
 
-  // TODO useReducer here to simplify state management.
-  const [formHeading, setFormHeading] = useState("");
-  const [title, setTitle] = useState("");
-  const [titleError, setTitleError] = useState(false);
-  const [startTime, setStartDateTime] = useState("07:00"); // TODO default could be 00:00? Google puts the current hour but every 30 min
-  const [endTime, setEndDateTime] = useState("08:00"); // TODO default should be one hour after the start date?
+  // The values are destructured from the reducer's state.
+  const [
+    { formHeading, title, titleError, startTime, endTime },
+    dispatch,
+  ] = useReducer(formReducer, initialState);
 
   useEffect(() => {
     // Only if there is a stagingAppointment we are editing.
     if (isDialogOpen && stagingAppointment) {
-      setFormHeading("Editar");
-      setTitle(stagingAppointment.title);
+      dispatch({ type: "FORM_HEADING", payload: "Editar" });
+      dispatch({ type: "TITLE_VALUE", payload: stagingAppointment.title });
       // TODO If in the form instead of a time picker a date time picker was
       // used, the method dateTimeToTimeString() below should be replaced by
       // another that returns a complete date string.
-      setStartDateTime(
-        dateTimeToPaddedTimeString(stagingAppointment.startDate)
-      );
-      setEndDateTime(dateTimeToPaddedTimeString(stagingAppointment.endDate));
+      dispatch({
+        type: "START_TIME_VALUE",
+        payload: dateTimeToPaddedTimeString(stagingAppointment.startDate),
+      });
+      dispatch({
+        type: "END_TIME_VALUE",
+        payload: dateTimeToPaddedTimeString(stagingAppointment.endDate),
+      });
     } else {
-      setFormHeading("Añadir");
+      dispatch({ type: "FORM_HEADING", payload: "Añadir" });
     }
   }, [isDialogOpen]);
 
@@ -56,7 +99,7 @@ const AppointmentFormDialog = () => {
     e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
     // TODO Validate title...
-    setTitle(e.target.value);
+    dispatch({ type: "TITLE_VALUE", payload: e.target.value });
   };
 
   const startDateHandler = (
@@ -64,7 +107,7 @@ const AppointmentFormDialog = () => {
   ) => {
     // TODO Validate date...
     console.log("Start date", e.target.value);
-    setStartDateTime(e.target.value);
+    dispatch({ type: "START_TIME_VALUE", payload: e.target.value });
   };
 
   const endDateHandler = (
@@ -72,13 +115,13 @@ const AppointmentFormDialog = () => {
   ) => {
     // TODO Validate end date. Is it after start date?
     console.log("End date", e.target.value);
-    setEndDateTime(e.target.value);
+    dispatch({ type: "END_TIME_VALUE", payload: e.target.value });
   };
 
   const handleClose = () => {
     calendarDispatch({ type: "CLOSE_DIALOG" });
     // Reset form values.
-    setTitle("");
+    dispatch({ type: "TITLE_VALUE", payload: "" });
     // TODO reset also the times to the defaults.
   };
 
@@ -102,7 +145,7 @@ const AppointmentFormDialog = () => {
       });
       handleClose();
     } else {
-      setTitleError(true);
+      dispatch({ type: "TITLE_ERROR", payload: true });
     }
   };
 
