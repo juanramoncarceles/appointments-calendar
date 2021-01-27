@@ -5,6 +5,7 @@ import { uuidv4 } from "../utils";
 import { AppointmentData } from "../types";
 import type { CalendarContextState, AppointmentFormData } from "../types";
 
+// All action types should be added here and TypeScript will take care of the rest.
 type Action =
   | { type: "NEW_APPOINTMENT"; payload: string }
   | { type: "CLOSE_DIALOG" }
@@ -20,11 +21,13 @@ const initialState: CalendarContextState = {
   stagingAppointment: undefined,
 };
 
+// I split state and dispatch to avoid problems with context, especially when calling dispatch in effects.
 const CalendarStateContext = createContext<CalendarContextState | undefined>(
   undefined
 );
 const CalendarDispatchContext = createContext<Dispatch | undefined>(undefined);
 
+// This is the reducer that will manage the state of the context.
 const calendarReducer = (state: CalendarContextState, action: Action) => {
   switch (action.type) {
     // Opens the form dialog, sets the selected day and clears stagingAppointment.
@@ -114,9 +117,9 @@ interface IProps {
   children: ReactNode;
 }
 
+// The actual context provider. It should be placed above a consumer in the tree.
 const CalendarProvider = ({ children }: IProps) => {
   const [state, dispatch] = useReducer(calendarReducer, initialState);
-  console.log("Context state:", state);
 
   return (
     <CalendarStateContext.Provider value={state}>
@@ -126,6 +129,9 @@ const CalendarProvider = ({ children }: IProps) => {
     </CalendarStateContext.Provider>
   );
 };
+
+// Those two custom hooks below will get the context from the nearest
+// CalendarProvider, and if there is none, they throw a helpful error message.
 
 const useCalendarState = () => {
   const context = useContext(CalendarStateContext);

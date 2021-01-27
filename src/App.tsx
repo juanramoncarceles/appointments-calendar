@@ -7,6 +7,8 @@ import Calendar from "./components/Calendar";
 import AppointmentFormDialog from "./components/AppointmentFormDialog";
 
 const App = () => {
+  console.log("👀");
+
   return (
     <Container maxWidth="lg">
       <Box my={4}>
