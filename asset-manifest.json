@@ -1,7 +1,7 @@
 {
   "files": {
-    "main.js": "/appointments-calendar/static/js/main.73351695.chunk.js",
-    "main.js.map": "/appointments-calendar/static/js/main.73351695.chunk.js.map",
+    "main.js": "/appointments-calendar/static/js/main.beaf8c5a.chunk.js",
+    "main.js.map": "/appointments-calendar/static/js/main.beaf8c5a.chunk.js.map",
     "runtime-main.js": "/appointments-calendar/static/js/runtime-main.c76fa54d.js",
     "runtime-main.js.map": "/appointments-calendar/static/js/runtime-main.c76fa54d.js.map",
     "static/js/2.b3e171e4.chunk.js": "/appointments-calendar/static/js/2.b3e171e4.chunk.js",
@@ -12,6 +12,6 @@
   "entrypoints": [
     "static/js/runtime-main.c76fa54d.js",
     "static/js/2.b3e171e4.chunk.js",
-    "static/js/main.73351695.chunk.js"
+    "static/js/main.beaf8c5a.chunk.js"
   ]
 }
